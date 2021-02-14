@@ -1,0 +1,135 @@
+﻿@model MyTasks.Core.ViewModels.TasksViewModel
+
+@{
+    ViewData["Title"] = "Tasks";
+}
+
+<h1>Moje zadania</h1>
+
+@* formularz filtrowania *@
+
+<form id="filterForm">
+    <div class="form-row align-items-center">
+        <div class="col-auto">
+            @Html.TextBoxFor(x=>x.FilterTasks.Title,
+           new { @class="form-control mb-2", placeholder="Tytuł"})
+        </div>
+        <div class="col-auto">
+            @Html.DropDownListFor(x=>x.FilterTasks.CategoryId,
+           new SelectList(Model.Categories,"Id","Name"),
+           " -- Wybierz kategorię --",
+           new { @class = "form-control mb-2"}
+           )
+        </div>
+        <div class="col-auto">
+            <div class="form-check mb-2">
+                @Html.CheckBoxFor(x=>x.FilterTasks.IsExecuted,
+               new { @class = "form-check-label" }
+               )
+                @Html.LabelFor(x=>x.FilterTasks.IsExecuted)
+            </div>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-2">Szukaj</button>
+        </div>
+    </div>
+</form>
+
+
+@* tabela z zadaniami *@
+<div>
+    @await Html.PartialAsync("_TasksTablePartial.cshtml",Model.Tasks)
+</div>
+    
+
+@section Scripts
+{
+    <script type="text/javascript">
+
+    // funkcja zostanie wywołana gdy zostanie załadowany już cały widok
+    $(document).ready(function () {
+        // najpierw zaznaczamy formularz o id = filterForm
+        // chcemy aby po kliknięci przycisku zostałą wywołana taka funkcja
+        // a chcemy, żeby za pomocą ajax'a została wywołana odpowiednia funkcja z kontrolera
+        // przesyłamy zserializowane dane z tego formularza
+        // jeżeli zakończone sukcesem, to zostanie zwrócona tabelka z widoku częściowego
+        $('#filterForm').submit(function () {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Tasks","Tasks")",
+                data: $(this).serialize(),
+                success: function (data) {
+                    $('#taskTable').html(data);
+                },
+                error: function (data) {
+                    alert(data.message)
+                },
+                dataType: "html"
+            });
+
+            // return false konieczne aby nie wykonał się jeszcze raz submit
+            return false;
+        });
+    });
+
+    // usuwanie zadania
+    function deleteTask(id, btn) {
+        if (!confirm("Czy na pewno chcesz usunąć zadanie ?")) {
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Delete","Tasks")",
+            data: {
+                id: id
+            },
+                success: function (data) {
+                    if (data.success) {
+                        var row = btn.parentNode.parentNode;
+                        row.parentNode.removeChild(row);
+                    }
+                    else {
+                        alert(data.message);
+                    }
+
+                },
+                error: function (data) {
+                    alert(data.message);
+                },
+                dataType: "json"
+            });
+    }
+
+    // oznaczanie zadania jako zrealizowane
+    function finishTask(id, btn) {
+        if (!confirm("Czy na pewno chcesz oznaczyć zadanie jako zrealizowane ?")) {
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Delete","Tasks")",
+            data: {
+                id: id
+            },
+                success: function (data) {
+                    if (data.success) {
+                        var row = btn.parentNode.parentNode;
+                        row.parentNode.removeChild(row);
+                    }
+                    else {
+                        alert(data.message);
+                    }
+
+                },
+                error: function (data) {
+                    alert(data.message);
+                },
+                dataType: "json"
+            });
+        }
+
+    // koniec funkcji
+    </script>
+}
