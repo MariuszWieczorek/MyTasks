@@ -1,4 +1,5 @@
-﻿using MyTasks.Core.Models.Domains;
+﻿using Microsoft.EntityFrameworkCore;
+using MyTasks.Core.Models.Domains;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,38 +9,70 @@ namespace MyTasks.Persistence.Repositories
 {
     public class TaskRepository
     {
+
+        private ApplicationDbContext _context;
+        public TaskRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         public IEnumerable<Task> Get(string userId,
             bool isExecuted = false,
             int categoryId = 0,
             string title = null)
 
         {
-            throw new NotImplementedException();
+            var tasks = _context.Tasks
+                .Include(x => x.Category)
+                .Where(x => x.UserId == userId && x.IsExecuted == isExecuted);
+
+            if (categoryId != 0)
+                tasks = tasks.Where(x => x.CategoryId == categoryId);
+
+            if (!string.IsNullOrWhiteSpace(title))
+                tasks = tasks.Where(x => x.Title.Contains(title));
+
+            return tasks.OrderBy(x => x.Term).ToList();
         }
 
-        internal Task Get(int id, string userId)
+        // jak użyjemy Single() to gdy zostanie zwrócona inna liczba rekordów niż 1 
+        // to zostanie rzucony wyjątek
+        // Jak użyjemy First lub FirstOrDefault, to jeżeli nie było by rekordu to zostanie zwrócony null
+        public Task Get(int id, string userId)
         {
-            throw new NotImplementedException();
+            var task = _context.Tasks.Single(x => x.Id == id && x.UserId == userId);
+            return task;
         }
 
-        internal void Add(Task task)
+        public void Add(Task task)
         {
-            throw new NotImplementedException();
+            _context.Add(task);
+            _context.SaveChanges();
         }
 
-        internal void Update(Task task)
+        public void Update(Task task)
         {
-            throw new NotImplementedException();
+            var taskToUpdate = _context.Tasks.Single(x => x.Id == task.Id);
+            taskToUpdate.Title = task.Title;
+            taskToUpdate.Description = task.Description;
+            taskToUpdate.Term = task.Term;
+            taskToUpdate.IsExecuted = task.IsExecuted;
+            taskToUpdate.CategoryId = task.CategoryId;
+
+            _context.SaveChanges();
         }
 
-        internal void Finish(int id, string userId)
+        public void Finish(int id, string userId)
         {
-            throw new NotImplementedException();
+            var taskToUpdate = _context.Tasks.Single(x => x.Id == id);
+            taskToUpdate.IsExecuted = true;
+            _context.SaveChanges();
         }
 
-        internal void Delete(int id, string userId)
+        public void Delete(int id, string userId)
         {
-            throw new NotImplementedException();
+            var taskToDelete = _context.Tasks.Single(x => x.Id == id);
+            _context.Remove(taskToDelete);
+            _context.SaveChanges();
         }
     }
 }

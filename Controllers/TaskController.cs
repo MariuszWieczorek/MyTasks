@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyTasks.Core.Models;
 using MyTasks.Core.Models.Domains;
 using MyTasks.Core.ViewModels;
+using MyTasks.Persistence;
 using MyTasks.Persistence.Extensions;
 using MyTasks.Persistence.Repositories;
 using System;
@@ -16,8 +17,14 @@ namespace MyTasks.Controllers
     public class TaskController : Controller
     {
 
-        private TaskRepository _taskRepository = new TaskRepository();
-        private CategoryRepository _categoryRepository = new CategoryRepository();
+        private TaskRepository _taskRepository;
+        private CategoryRepository _categoryRepository;
+
+        public TaskController(ApplicationDbContext context)
+        {
+            _taskRepository = new TaskRepository(context);
+            _categoryRepository = new CategoryRepository(context);
+        }
 
         #region Tasks ----------------------------------------------------------------
         public IActionResult Tasks()

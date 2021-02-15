@@ -8,9 +8,14 @@ namespace MyTasks.Persistence.Repositories
 {
     public class CategoryRepository
     {
+        private ApplicationDbContext _context;
+        public CategoryRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         public IEnumerable<Category> GetCategories()
         {
-            throw new NotImplementedException();
+            return _context.Categories.OrderBy(x => x.Name).ToList();
         }
     }
 }
