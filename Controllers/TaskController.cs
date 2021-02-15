@@ -52,7 +52,7 @@ namespace MyTasks.Controllers
                 viewModel.FilterTasks.Title);
         
 
-            return PartialView("_TasksTable",tasks);
+            return PartialView("_TasksTablePartial",tasks);
         }
         #endregion
 
@@ -120,6 +120,7 @@ namespace MyTasks.Controllers
         // który wywoła akcję Delete typu Post w kontrolerze Task
         // i to jest ta akcja
 
+        [HttpPost]
         public IActionResult Delete(int id)
         {
             try
@@ -140,7 +141,8 @@ namespace MyTasks.Controllers
         // zostanie wywołany ajax
         // który wywoła akcję Delete typu Post w kontrolerze Task
         // i to jest ta akcja
-
+        
+        [HttpPost]
         public IActionResult Finish(int id)
         {
             try

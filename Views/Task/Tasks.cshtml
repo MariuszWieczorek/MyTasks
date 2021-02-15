@@ -53,16 +53,17 @@
         // a chcemy, żeby za pomocą ajax'a została wywołana odpowiednia funkcja z kontrolera
         // przesyłamy zserializowane dane z tego formularza
         // jeżeli zakończone sukcesem, to zostanie zwrócona tabelka z widoku częściowego
+
         $('#filterForm').submit(function () {
             $.ajax({
-                type: "POST",
-                url: "@Url.Action("Tasks","Tasks")",
+                type: 'POST',
+                url: "@Url.Action("Tasks","Task")",
                 data: $(this).serialize(),
                 success: function (data) {
-                    $('#taskTable').html(data);
+                    $('#tasksTable').html(data);
                 },
                 error: function (data) {
-                    alert(data.message)
+                    alert(data.message + ' filter ')
                 },
                 dataType: "html"
             });
@@ -77,10 +78,9 @@
         if (!confirm("Czy na pewno chcesz usunąć zadanie ?")) {
             return;
         }
-
         $.ajax({
-            type: "POST",
-            url: "@Url.Action("Delete","Tasks")",
+            type: 'POST',
+            url: "@Url.Action("Delete","Task")",
             data: {
                 id: id
             },
@@ -90,12 +90,12 @@
                         row.parentNode.removeChild(row);
                     }
                     else {
-                        alert(data.message);
+                        alert(data.message + ' Delete 1 ');
                     }
 
                 },
                 error: function (data) {
-                    alert(data.message);
+                    alert(data.message + ' Delete 2 ');
                 },
                 dataType: "json"
             });
@@ -106,10 +106,9 @@
         if (!confirm("Czy na pewno chcesz oznaczyć zadanie jako zrealizowane ?")) {
             return;
         }
-
         $.ajax({
-            type: "POST",
-            url: "@Url.Action("Delete","Tasks")",
+            type: 'POST',
+            url: "@Url.Action("Finish","Task")",
             data: {
                 id: id
             },
@@ -119,12 +118,12 @@
                         row.parentNode.removeChild(row);
                     }
                     else {
-                        alert(data.message);
+                        alert(data.message + ' finish 1');
                     }
 
                 },
                 error: function (data) {
-                    alert(data.message);
+                    alert(data.message + ' finish 2');
                 },
                 dataType: "json"
             });
