@@ -47,10 +47,10 @@
 
 @if (Model.Task.Id > 0)
 {
-    <div class="form-check">
-        @Html.LabelFor(x => x.Task.IsExecuted)
-        @Html.CheckBoxFor(x => x.Task.IsExecuted, new { @class = "form-check-input" })
-    </div>
+<div class="form-check mb-2">
+    @Html.CheckBoxFor(x => x.Task.IsExecuted, new { @class = "form-check-input" })
+    @Html.LabelFor(x => x.Task.IsExecuted)
+</div>
 }
 
 <button type="submit" class="btn btn-primary btn-lg mt-2">Zapisz</button>

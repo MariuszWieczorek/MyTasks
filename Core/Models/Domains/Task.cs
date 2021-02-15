@@ -20,6 +20,8 @@ namespace MyTasks.Core.Models.Domains
         [Required(ErrorMessage = "Pole kategoria jest wymagane.")]
         [Display(Name = "Kategoria")]
         public int CategoryId { get; set; }
+        
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}")]
         [Display(Name = "Termin")]
         public DateTime? Term { get; set; }
         [Display(Name = "Zrealizowane")]
