@@ -1,4 +1,5 @@
-﻿using MyTasks.Persistence.Repositories;
+﻿using MyTasks.Core;
+using MyTasks.Persistence.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MyTasks.Persistence
 {
-    public class UnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         // readonly przy polu oznacza, że jego wartość
         // możemy zmienić tylko w konstruktorze
@@ -14,8 +15,8 @@ namespace MyTasks.Persistence
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
-            Task = new TaskRepository(_context);
-            Category = new CategoryRepository(_context);
+            Task = new TaskRepository(context);
+            Category = new CategoryRepository(context);
         }
 
         // obiekty repozytoryjne 

@@ -1,4 +1,5 @@
 ﻿using MyTasks.Core.Models.Domains;
+using MyTasks.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Linq;
 
 namespace MyTasks.Persistence.Services
 {
-    public class TaskService
+    public class TaskService : ITaskService 
     {
         private readonly UnitOfWork _unitOfWork;
         public TaskService(UnitOfWork unitOfWork)
