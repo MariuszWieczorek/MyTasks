@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyTasks.Core.Models.Domains;
+using MyTasks.Core.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Linq;
 
 namespace MyTasks.Persistence.Repositories
 {
-    public class TaskRepository
+    public class TaskRepository : ITaskRepository
     {
 
         private readonly ApplicationDbContext _context;
