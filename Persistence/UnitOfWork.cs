@@ -8,8 +8,8 @@ namespace MyTasks.Persistence
     {
         // readonly przy polu oznacza, że jego wartość
         // możemy zmienić tylko w konstruktorze
-        private readonly ApplicationDbContext _context;
-        public UnitOfWork(ApplicationDbContext context)
+        private readonly IApplicationDbContext _context;
+        public UnitOfWork(IApplicationDbContext context)
         {
             _context = context;
             Task = new TaskRepository(context);

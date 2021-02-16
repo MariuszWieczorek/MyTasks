@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyTasks.Core.Models;
 using MyTasks.Core.Models.Domains;
+using MyTasks.Core.Services;
 using MyTasks.Core.ViewModels;
 using MyTasks.Persistence;
 using MyTasks.Persistence.Extensions;
@@ -18,13 +19,13 @@ namespace MyTasks.Controllers
     public class TaskController : Controller
     {
 
-        private readonly TaskService _taskService;
-        private readonly CategoryService _categoryService;
+        private readonly ITaskService _taskService;
+        private readonly ICategoryService _categoryService;
 
-        public TaskController(ApplicationDbContext context)
+        public TaskController(ITaskService task, ICategoryService category)
         {
-            _taskService = new TaskService(new UnitOfWork(context));
-            _categoryService = new CategoryService(new UnitOfWork(context));
+            _taskService = task;
+            _categoryService = category;
         }
 
         #region Tasks ----------------------------------------------------------------
