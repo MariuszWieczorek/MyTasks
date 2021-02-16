@@ -1,4 +1,5 @@
-﻿using MyTasks.Core.Models.Domains;
+﻿using MyTasks.Core;
+using MyTasks.Core.Models.Domains;
 using MyTasks.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -9,8 +10,8 @@ namespace MyTasks.Persistence.Services
 {
     public class CategoryService : ICategoryService
     {
-        private readonly UnitOfWork _unitOfWork;
-        public CategoryService(UnitOfWork unitOfWork)
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }

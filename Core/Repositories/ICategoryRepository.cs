@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace MyTasks.Core.Repositories
 {
-    interface ICategoryRepository
+    public interface ICategoryRepository
     {
         public IEnumerable<Category> GetCategories();
     }

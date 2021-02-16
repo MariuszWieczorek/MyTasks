@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyTasks.Core;
 using MyTasks.Core.Models.Domains;
 using MyTasks.Core.Repositories;
 using System;
@@ -11,8 +12,8 @@ namespace MyTasks.Persistence.Repositories
     public class TaskRepository : ITaskRepository
     {
 
-        private readonly ApplicationDbContext _context;
-        public TaskRepository(ApplicationDbContext context)
+        private readonly IApplicationDbContext _context;
+        public TaskRepository(IApplicationDbContext context)
         {
             _context = context;
         }
@@ -47,8 +48,7 @@ namespace MyTasks.Persistence.Repositories
 
         public void Add(Task task)
         {
-            _context.Add(task);
-            _context.SaveChanges();
+            _context.Tasks.Add(task);
         }
 
         public void Update(Task task)
@@ -59,9 +59,7 @@ namespace MyTasks.Persistence.Repositories
             taskToUpdate.Term = task.Term;
             taskToUpdate.IsExecuted = task.IsExecuted;
             taskToUpdate.CategoryId = task.CategoryId;
-
-            _context.SaveChanges();
-        }
+         }
 
         public void Finish(int id, string userId)
         {
@@ -73,8 +71,7 @@ namespace MyTasks.Persistence.Repositories
         public void Delete(int id, string userId)
         {
             var taskToDelete = _context.Tasks.Single(x => x.Id == id && x.UserId == userId);
-            _context.Remove(taskToDelete);
-            _context.SaveChanges();
+            _context.Tasks.Remove(taskToDelete);
         }
     }
 }

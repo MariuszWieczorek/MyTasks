@@ -1,9 +1,6 @@
 ﻿using MyTasks.Core;
+using MyTasks.Core.Repositories;
 using MyTasks.Persistence.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MyTasks.Persistence
 {
@@ -20,8 +17,8 @@ namespace MyTasks.Persistence
         }
 
         // obiekty repozytoryjne 
-        public TaskRepository Task { get; set; }
-        public CategoryRepository Category { get; set; }
+        public ITaskRepository Task { get; set; }
+        public ICategoryRepository Category { get; set; }
 
         // na koniec metoda zapisująca zmiany
         public void Complete()
