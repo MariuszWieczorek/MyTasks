@@ -10,11 +10,12 @@ namespace MyTasks.Persistence.Repositories
     public class TaskRepository
     {
 
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
         public TaskRepository(ApplicationDbContext context)
         {
             _context = context;
         }
+        
         public IEnumerable<Task> Get(string userId,
             bool isExecuted = false,
             int categoryId = 0,
@@ -63,14 +64,14 @@ namespace MyTasks.Persistence.Repositories
 
         public void Finish(int id, string userId)
         {
-            var taskToUpdate = _context.Tasks.Single(x => x.Id == id);
+            var taskToUpdate = _context.Tasks.Single(x => x.Id == id && x.UserId == userId);
             taskToUpdate.IsExecuted = true;
             _context.SaveChanges();
         }
 
         public void Delete(int id, string userId)
         {
-            var taskToDelete = _context.Tasks.Single(x => x.Id == id);
+            var taskToDelete = _context.Tasks.Single(x => x.Id == id && x.UserId == userId);
             _context.Remove(taskToDelete);
             _context.SaveChanges();
         }

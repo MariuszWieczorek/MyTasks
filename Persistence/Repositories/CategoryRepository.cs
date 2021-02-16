@@ -8,7 +8,7 @@ namespace MyTasks.Persistence.Repositories
 {
     public class CategoryRepository
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
         public CategoryRepository(ApplicationDbContext context)
         {
             _context = context;

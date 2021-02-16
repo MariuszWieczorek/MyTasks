@@ -6,6 +6,7 @@ using MyTasks.Core.ViewModels;
 using MyTasks.Persistence;
 using MyTasks.Persistence.Extensions;
 using MyTasks.Persistence.Repositories;
+using MyTasks.Persistence.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,13 +18,13 @@ namespace MyTasks.Controllers
     public class TaskController : Controller
     {
 
-        private TaskRepository _taskRepository;
-        private CategoryRepository _categoryRepository;
+        private readonly TaskService _taskService;
+        private readonly CategoryService _categoryService;
 
         public TaskController(ApplicationDbContext context)
         {
-            _taskRepository = new TaskRepository(context);
-            _categoryRepository = new CategoryRepository(context);
+            _taskService = new TaskService(new UnitOfWork(context));
+            _categoryService = new CategoryService(new UnitOfWork(context));
         }
 
         #region Tasks ----------------------------------------------------------------
@@ -34,8 +35,8 @@ namespace MyTasks.Controllers
             var vm = new TasksViewModel()
             {
                 FilterTasks = new FilterTasks(),
-                Tasks = _taskRepository.Get(userId),
-                Categories = _categoryRepository.GetCategories()
+                Tasks = _taskService.Get(userId),
+                Categories = _categoryService.GetCategories()
             };
 
             return View(vm);
@@ -46,7 +47,7 @@ namespace MyTasks.Controllers
         public IActionResult Tasks(TasksViewModel viewModel)
         {
             var userId = User.GetUserId();
-            var tasks = _taskRepository.Get(userId,
+            var tasks = _taskService.Get(userId,
                 viewModel.FilterTasks.IsExecuted,
                 viewModel.FilterTasks.CategoryId,
                 viewModel.FilterTasks.Title);
@@ -68,12 +69,12 @@ namespace MyTasks.Controllers
 
             var task = id == 0 ?
                 new Task { Id = 0, UserId = userId, Term = DateTime.Now } :
-                _taskRepository.Get(id, userId);
+                _taskService.Get(id, userId);
 
             var vm = new TaskViewModel()
             {
                 Task = task,
-                Categories = _categoryRepository.GetCategories(),
+                Categories = _categoryService.GetCategories(),
                 Heading = id == 0 ?
                  "nowe zadanie" :
                  "edycja zadania"
@@ -98,7 +99,7 @@ namespace MyTasks.Controllers
                 var vm = new TaskViewModel()
                 {
                     Task = task,
-                    Categories = _categoryRepository.GetCategories(),
+                    Categories = _categoryService.GetCategories(),
                     Heading = task.Id == 0 ?
                      "nowe zadanie" :
                      "edycja zadania"
@@ -108,9 +109,10 @@ namespace MyTasks.Controllers
             }
 
             if (task.Id == 0)
-                _taskRepository.Add(task);
+                _taskService.Add(task);
             else
-                _taskRepository.Update(task);
+                _taskService.Update(task);
+
 
             return RedirectToAction("Tasks", "Task");
         }
@@ -126,7 +128,7 @@ namespace MyTasks.Controllers
             try
             {
                 var userId = User.GetUserId();
-                _taskRepository.Delete(id, userId);
+                _taskService.Delete(id, userId);
             }
             catch (Exception ex)
             {
@@ -148,7 +150,7 @@ namespace MyTasks.Controllers
             try
             {
                 var userId = User.GetUserId();
-                _taskRepository.Finish(id, userId);
+                _taskService.Finish(id, userId);
             }
             catch (Exception ex)
             {
