@@ -11,6 +11,7 @@ using MyTasks.Core;
 using MyTasks.Core.Models.Domains;
 using MyTasks.Core.Services;
 using MyTasks.Data;
+using MyTasks.Helpers;
 using MyTasks.Persistence;
 using MyTasks.Persistence.Services;
 using System;
@@ -32,6 +33,13 @@ namespace MyTasks
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+           // dodane razem z folderem helpers aby uzdrowiæ daty
+            services.AddMvc(options =>
+            {
+                options.ModelBinderProviders.Insert(0, new DateTimeModelBinderProvider());
+            });
+
+
             // dla ka¿dego request'a jedna instancja tej klasy
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<ICategoryService, CategoryService>();
