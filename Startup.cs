@@ -34,6 +34,7 @@ namespace MyTasks
         {
             // dla ka¿dego request'a jedna instancja tej klasy
             services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 

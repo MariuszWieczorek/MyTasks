@@ -1,4 +1,5 @@
 ﻿using MyTasks.Core;
+using MyTasks.Core.Models;
 using MyTasks.Core.Models.Domains;
 using MyTasks.Core.Services;
 using System;
@@ -16,13 +17,16 @@ namespace MyTasks.Persistence.Services
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<Task> Get(string userId,
+        /*
+         * public IEnumerable<Task> Get(string userId,
             bool isExecuted = false,
             int categoryId = 0,
             string title = null)
+        */
 
+        public IEnumerable<Task> Get(string userId,FilterTasks filterTasks)
         {
-            return _unitOfWork.Task.Get(userId, isExecuted, categoryId, title);
+            return _unitOfWork.Task.Get(userId, filterTasks);
         }
 
         public Task Get(int id, string userId)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyTasks.Core;
+using MyTasks.Core.Models;
 using MyTasks.Core.Models.Domains;
 using MyTasks.Core.Repositories;
 using System;
@@ -18,21 +19,24 @@ namespace MyTasks.Persistence.Repositories
             _context = context;
         }
         
+        /*
         public IEnumerable<Task> Get(string userId,
             bool isExecuted = false,
             int categoryId = 0,
             string title = null)
+        */
 
+        public  IEnumerable<Task> Get(string userId, FilterTasks filterTasks)
         {
             var tasks = _context.Tasks
                 .Include(x => x.Category)
-                .Where(x => x.UserId == userId && x.IsExecuted == isExecuted);
+                .Where(x => x.UserId == userId && x.IsExecuted == filterTasks.IsExecuted);
 
-            if (categoryId != 0)
-                tasks = tasks.Where(x => x.CategoryId == categoryId);
+            if (filterTasks.CategoryId != 0)
+                tasks = tasks.Where(x => x.CategoryId == filterTasks.CategoryId);
 
-            if (!string.IsNullOrWhiteSpace(title))
-                tasks = tasks.Where(x => x.Title.Contains(title));
+            if (!string.IsNullOrWhiteSpace(filterTasks.Title))
+                tasks = tasks.Where(x => x.Title.Contains(filterTasks.Title));
 
             return tasks.OrderBy(x => x.Term).ToList();
         }

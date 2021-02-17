@@ -36,7 +36,7 @@ namespace MyTasks.Controllers
             var vm = new TasksViewModel()
             {
                 FilterTasks = new FilterTasks(),
-                Tasks = _taskService.Get(userId),
+                Tasks = _taskService.Get(userId, new FilterTasks()),
                 Categories = _categoryService.GetCategories()
             };
 
@@ -48,11 +48,13 @@ namespace MyTasks.Controllers
         public IActionResult Tasks(TasksViewModel viewModel)
         {
             var userId = User.GetUserId();
+            var tasks = _taskService.Get(userId, viewModel.FilterTasks);
+            /*
             var tasks = _taskService.Get(userId,
                 viewModel.FilterTasks.IsExecuted,
                 viewModel.FilterTasks.CategoryId,
                 viewModel.FilterTasks.Title);
-        
+            */
 
             return PartialView("_TasksTablePartial",tasks);
         }
