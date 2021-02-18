@@ -37,7 +37,7 @@ namespace MyTasks.Controllers
             {
                 FilterTasks = new FilterTasks(),
                 Tasks = _taskService.Get(userId, new FilterTasks()),
-                Categories = _categoryService.GetCategories()
+                Categories = _categoryService.GetCategories(userId)
             };
 
             return View(vm);
@@ -49,13 +49,7 @@ namespace MyTasks.Controllers
         {
             var userId = User.GetUserId();
             var tasks = _taskService.Get(userId, viewModel.FilterTasks);
-            /*
-            var tasks = _taskService.Get(userId,
-                viewModel.FilterTasks.IsExecuted,
-                viewModel.FilterTasks.CategoryId,
-                viewModel.FilterTasks.Title);
-            */
-
+    
             return PartialView("_TasksTablePartial",tasks);
         }
         #endregion
@@ -77,7 +71,7 @@ namespace MyTasks.Controllers
             var vm = new TaskViewModel()
             {
                 Task = task,
-                Categories = _categoryService.GetCategories(),
+                Categories = _categoryService.GetCategories(userId),
                 Heading = id == 0 ?
                  "nowe zadanie" :
                  "edycja zadania"
@@ -102,7 +96,7 @@ namespace MyTasks.Controllers
                 var vm = new TaskViewModel()
                 {
                     Task = task,
-                    Categories = _categoryService.GetCategories(),
+                    Categories = _categoryService.GetCategories(userId),
                     Heading = task.Id == 0 ?
                      "nowe zadanie" :
                      "edycja zadania"
@@ -164,6 +158,80 @@ namespace MyTasks.Controllers
             return Json(new { success = true });
         }
 
+        #endregion
+
+        #region Category: przeglądanie, edycja/dodawanie/usuwanie kategorii ------------------
+
+        public IActionResult Categories()
+        {
+            var userId = User.GetUserId();
+            var categories = _categoryService.GetCategories(userId);
+
+            return View(categories);
+        }
+        
+         public IActionResult Category(int id)
+        {
+            var userId = User.GetUserId();
+            var category = id == 0 ?
+                new Category { Id = 0, UserId = userId, Name = string.Empty } :
+                _categoryService.GetCategory(id, userId);
+
+            var vm = new CategoryViewModel()
+            {
+                Category = category,
+                Heading = ""
+            };
+
+            return View(vm);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Category(Category category)
+        {
+            var userId = User.GetUserId();
+            category.UserId = userId;
+
+            if (!ModelState.IsValid)
+            {
+                var vm = new CategoryViewModel()
+                {
+                    Category = category,
+                    Heading = category.Id == 0 ?
+                     "nowa kategoria" :
+                     "edycja kategorii"
+                };
+
+                return View("Category", vm);
+            }
+
+            if (category.Id == 0)
+                _categoryService.AddCategory(category);
+            else
+                _categoryService.UpdateCategory(category);
+
+
+            return RedirectToAction("Categories", "Task");
+        }
+
+        [HttpPost]
+        public IActionResult DeleteCategory(int id)
+        {
+            try
+            {
+                var userId = User.GetUserId();
+                _categoryService.DeleteCategory(id, userId);
+            }
+            catch (Exception ex)
+            {
+                // logowanie do pliku
+                return Json(new { success = false, message = ex.Message });
+            }
+
+            return Json(new { success = true });
+        }
         #endregion
 
     }

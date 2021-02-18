@@ -12,7 +12,10 @@ namespace MyTasks.Core.Models.Domains
         public ApplicationUser()
         {
             Tasks = new Collection<Task>();
+            Users = new Collection<ApplicationUser>();
         }
+        
         public ICollection<Task> Tasks;
+        public ICollection<ApplicationUser> Users;
     }
 }

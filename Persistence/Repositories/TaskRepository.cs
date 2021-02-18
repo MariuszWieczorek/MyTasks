@@ -69,7 +69,6 @@ namespace MyTasks.Persistence.Repositories
         {
             var taskToUpdate = _context.Tasks.Single(x => x.Id == id && x.UserId == userId);
             taskToUpdate.IsExecuted = true;
-            _context.SaveChanges();
         }
 
         public void Delete(int id, string userId)

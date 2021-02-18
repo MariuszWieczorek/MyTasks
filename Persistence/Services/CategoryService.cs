@@ -16,10 +16,32 @@ namespace MyTasks.Persistence.Services
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<Category> GetCategories()
+        public void AddCategory(Category category)
         {
-            return _unitOfWork.Category.GetCategories();
+            _unitOfWork.Category.AddCategory(category);
+            _unitOfWork.Complete();
         }
 
+        public void DeleteCategory(int id, string userId)
+        {
+            _unitOfWork.Category.DeleteCategory(id, userId);
+            _unitOfWork.Complete();
+        }
+
+        public IEnumerable<Category> GetCategories(string userId)
+        {
+            return _unitOfWork.Category.GetCategories(userId);
+        }
+
+        public void UpdateCategory(Category category)
+        {
+            _unitOfWork.Category.UpdateCategory(category);
+            _unitOfWork.Complete();
+        }
+
+        public Category GetCategory(int id,string userId)
+        {
+            return _unitOfWork.Category.GetCategory(id, userId);
+        }
     }
 }

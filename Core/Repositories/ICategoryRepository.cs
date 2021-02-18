@@ -7,6 +7,11 @@ namespace MyTasks.Core.Repositories
 {
     public interface ICategoryRepository
     {
-        public IEnumerable<Category> GetCategories();
+        IEnumerable<Category> GetCategories(string userId);
+        void AddCategory(Category category);
+        Category GetCategory(int id, string userId);
+        void UpdateCategory(Category category);
+        void DeleteCategory(int id, string userId);
+
     }
 }
