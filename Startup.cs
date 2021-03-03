@@ -9,10 +9,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyTasks.Core;
 using MyTasks.Core.Models.Domains;
+using MyTasks.Core.Repositories;
 using MyTasks.Core.Services;
 using MyTasks.Data;
 using MyTasks.Helpers;
 using MyTasks.Persistence;
+using MyTasks.Persistence.Repositories;
 using MyTasks.Persistence.Services;
 using System;
 using System.Collections.Generic;
@@ -45,6 +47,9 @@ namespace MyTasks
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ITaskRepository, TaskRepository>();
+
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(

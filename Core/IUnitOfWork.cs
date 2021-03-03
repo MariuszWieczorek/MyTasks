@@ -8,8 +8,8 @@ namespace MyTasks.Core
 {
     public interface IUnitOfWork
     {
-        ITaskRepository Task { get; set; }
-        ICategoryRepository Category { get; set; }
+        ITaskRepository Task { get; }
+        ICategoryRepository Category { get;  }
         void Complete();
     }
 }
