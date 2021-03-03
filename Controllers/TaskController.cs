@@ -27,14 +27,14 @@ namespace MyTasks.Controllers
         {
             _taskService = task;
             _categoryService = category;
-            _mwbase = new MwBaseRepository();
+            //_mwbase = new MwBaseRepository();
         }
 
         #region Tasks ----------------------------------------------------------------
         public IActionResult Tasks()
         {
             var userId = User.GetUserId();
-            var mwbase = _mwbase.PobierzSkladniki("KOGT28169121L");
+           // var mwbase = _mwbase.PobierzSkladniki("KOGT28169121L");
 
             var vm = new TasksViewModel()
             {
