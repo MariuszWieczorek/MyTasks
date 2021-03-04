@@ -9,6 +9,7 @@ namespace MyTasks.Persistence
         // readonly przy polu oznacza, że jego wartość
         // możemy zmienić tylko w konstruktorze
         private readonly IApplicationDbContext _context;
+        
         public UnitOfWork(IApplicationDbContext context, ICategoryRepository category, ITaskRepository task)
         {
             _context = context;
@@ -26,5 +27,6 @@ namespace MyTasks.Persistence
             _context.SaveChanges();
         }
     }
+
 
 }
